@@ -4,7 +4,24 @@ import cv2
 import numpy as np
 import os
 import face_recognition
+import setup_files
+import create_db
 from datetime import datetime
+
+from tinydb import TinyDB, Query
+
+# open()
+# 'r' - Read - Default value. Opens a file for reading, error if the file does not exist
+# 'a' - Append - Opens a file for appending, creates the file if it does not exist
+# 'w' - Write - Opens a file for writing, creates the file if it does not exist
+# 'x' - Create - Creates the specified file, returns an error if the file exist
+# 't' - Text - Default value. Text mode
+# 'b' - Binary - Binary mode (e.g. images)
+# '+' - Open a file for updating (reading and writing)
+
+# create the directories & empty files for storage if not already
+setup_files.add_files()
+create_db.create_db()
 
 # variables for storing the facial images
 face_images_path = 'Facial Images'
@@ -24,7 +41,7 @@ def get_encoding():
 
 
 def found_unknown_image(face_image):
-    with open('../Storage/unknown_images.csv', 'r+') as f:
+    with open('../Data/unknown_images.csv', 'r+') as f:
         data_list = f.readlines()
         image_list = []
         for line in data_list:
@@ -39,7 +56,7 @@ def found_unknown_image(face_image):
 
 
 def found_known_image(face_image):
-    with open('../Storage/detected_faces.csv', 'r+') as f:
+    with open('../Data/detected_faces.csv', 'r+') as f:
         data_list = f.readlines()
         image_list = []
         for line in data_list:
