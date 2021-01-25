@@ -4,11 +4,9 @@ import cv2
 import numpy as np
 import os
 import face_recognition
-import setup_files
-import create_db
 from datetime import datetime
-
 from tinydb import TinyDB, Query
+
 
 # open()
 # 'r' - Read - Default value. Opens a file for reading, error if the file does not exist
@@ -20,8 +18,8 @@ from tinydb import TinyDB, Query
 # '+' - Open a file for updating (reading and writing)
 
 # create the directories & empty files for storage if not already
-setup_files.add_files()
-create_db.create_db()
+# setup_files.add_files()
+# create_db.create_db()
 
 # variables for storing the facial images
 face_images_path = 'Facial Images'
@@ -29,6 +27,7 @@ facial_images = []  # a list of the files in the path
 face_names = []  # a list of all the names from the files
 face_list = os.listdir(face_images_path)
 video = cv2.VideoCapture(0)  # use webcam 0 for video
+query = Query()
 
 
 def get_encoding():
@@ -41,33 +40,51 @@ def get_encoding():
 
 
 def found_unknown_image(face_image):
-    with open('../Data/unknown_images.csv', 'r+') as f:
-        data_list = f.readlines()
-        image_list = []
-        for line in data_list:
-            entry = line.split(',')
-            image_list.append(entry[0])
-        if face_image not in image_list:
-            # split the details from the found image file
-            face_name, date_found, time_found = face_image.split('_')
-            get_face_id = date_found + time_found
-            face_id = get_face_id.replace('-', '')
-            f.writelines(f'\n{face_id},{face_image},{face_name},{date_found},{time_found}')
+    db = TinyDB('../Data/edge_security_db.json')  # path to the database
+    face_name, date_found, time_found = face_image.split('_')
+    ui_table = db.table('unknown_image')  # table to hold unknown image info
+    if not ui_table.search(query.file_name == face_image):
+        ui_table.insert({"file_name": face_image, "name": face_name, "date_found": date_found, "time_found": time_found})
+        db.close()
+
+    # -- ORIGINAL VERSION USING CSV --
+    # with open('../Data/unknown_images.csv', 'r+') as f:
+    #     data_list = f.readlines()
+    #     image_list = []
+    #     for line in data_list:
+    #         entry = line.split(',')
+    #         image_list.append(entry[0])
+    #     if face_image not in image_list:
+    #         # split the details from the found image file
+    #         face_name, date_found, time_found = face_image.split('_')
+    #         get_face_id = date_found + time_found
+    #         face_id = get_face_id.replace('-', '')
+    #         f.writelines(f'\n{face_id},{face_image},{face_name},{date_found},{time_found}')
 
 
 def found_known_image(face_image):
-    with open('../Data/detected_faces.csv', 'r+') as f:
-        data_list = f.readlines()
-        image_list = []
-        for line in data_list:
-            entry = line.split(',')
-            image_list.append(entry[0])
-        if face_image not in image_list:
-            # split the details from the found image file
-            face_name, date_found, time_found = face_image.split('_')
-            get_face_id = date_found + time_found
-            face_id = get_face_id.replace('-', '')
-            f.writelines(f'\n{face_id},{face_image},{face_name},{date_found},{time_found}')
+    db = TinyDB('../Data/edge_security_db.json')  # path to the database
+    face_name, date_found, time_found = face_image.split('_')
+    dt = datetime.now()
+    date_detected = dt.strftime('%d-%m-%y')
+    time_detected = dt.strftime('%H:%M:%S')
+    df_table = db.table('detected_face')  # table to hold detected image info
+    df_table.insert({"file_name": face_image, "name": face_name, "date_detected": date_detected, "time_detected": time_detected})
+    db.close()
+
+    # -- ORIGINAL VERSION USING CSV --
+    # with open('../Data/detected_faces.csv', 'r+') as f:
+    #     data_list = f.readlines()
+    #     image_list = []
+    #     for line in data_list:
+    #         entry = line.split(',')
+    #         image_list.append(entry[0])
+    #     if face_image not in image_list:
+    #         # split the details from the found image file
+    #         face_name, date_found, time_found = face_image.split('_')
+    #         get_face_id = date_found + time_found
+    #         face_id = get_face_id.replace('-', '')
+    #         f.writelines(f'\n{face_id},{face_image},{face_name},{date_found},{time_found}')
 
 
 # loop through each frame & compare any found faces with stored images
