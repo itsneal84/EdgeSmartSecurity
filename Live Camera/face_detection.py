@@ -21,13 +21,14 @@ from tinydb import TinyDB, Query
 # setup_files.add_files()
 # create_db.create_db()
 
+
 # variables for storing the facial images
-face_images_path = 'Facial Images'
+face_images_path = '../Facial Images'
 facial_images = []  # a list of the files in the path
 face_names = []  # a list of all the names from the files
-face_list = os.listdir(face_images_path)
-video = cv2.VideoCapture(0)  # use webcam 0 for video
+face_list = os.listdir(face_images_path)  # list of all the files in the directory
 query = Query()
+stream_link = '../Test Video/People in Street.mp4'
 
 
 def get_encoding():
@@ -43,8 +44,10 @@ def found_unknown_image(face_image):
     db = TinyDB('../Data/edge_security_db.json')  # path to the database
     face_name, date_found, time_found = face_image.split('_')
     ui_table = db.table('unknown_image')  # table to hold unknown image info
+    ur_table = db.table('unread_data')  # table to hold unread data e.g. new images
     if not ui_table.search(query.file_name == face_image):
         ui_table.insert({"file_name": face_image, "name": face_name, "date_found": date_found, "time_found": time_found})
+        ur_table.insert({"type": "unknown image", "details": {"file_name": face_image, "name": face_name, "date_found": date_found, "time_found": time_found}})
         db.close()
 
     # -- ORIGINAL VERSION USING CSV --
@@ -69,7 +72,9 @@ def found_known_image(face_image):
     date_detected = dt.strftime('%d-%m-%y')
     time_detected = dt.strftime('%H:%M:%S')
     df_table = db.table('detected_face')  # table to hold detected image info
+    ur_table = db.table('unread_data')  # table to hold unread data e.g. new images
     df_table.insert({"file_name": face_image, "name": face_name, "date_detected": date_detected, "time_detected": time_detected})
+    ur_table.insert({"type": "known image", "details": {"file_name": face_image, "name": face_name, "date_detected": date_detected, "time_detected": time_detected}})
     db.close()
 
     # -- ORIGINAL VERSION USING CSV --
@@ -87,44 +92,55 @@ def found_known_image(face_image):
     #         f.writelines(f'\n{face_id},{face_image},{face_name},{date_found},{time_found}')
 
 
-# loop through each frame & compare any found faces with stored images
-while True:
-    success, img = video.read()
-    img_small = cv2.resize(img, (0, 0), None, 0.25, 0.25)  # reduce the image size from live frame
-    img_small = cv2.cvtColor(img_small, cv2.COLOR_BGR2RGB)
+def run_detection(stream_link):
+    # loop through each frame & compare any found faces with stored images
+    video = cv2.VideoCapture(stream_link)  # use webcam 0 for video
+    while True:
+        success, img = video.read()
 
-    for face in face_list:
-        current_image = cv2.imread(f'{face_images_path}/{face}')
-        if current_image is not None:
-            facial_images.append(current_image)
-            face_names.append(os.path.splitext(face)[0])  # trim the file name to use as detected name
-        else:
-            break
+        # img_small = cv2.resize(img, (0, 0), None, 0.25, 0.25)  # reduce the image size from live frame
+        # img_small = cv2.cvtColor(img_small, cv2.COLOR_BGR2RGB)
 
-    # find the face using face_recognition library
-    face_in_current_frame = face_recognition.face_locations(img_small)
-    encode_current_frame = face_recognition.face_encodings(img_small)
+        for face in face_list:
+            current_image = cv2.imread(f'{face_images_path}/{face}')
+            if current_image is not None:
+                facial_images.append(current_image)
+                face_names.append(os.path.splitext(face)[0])  # trim the file name to use as detected name
+            else:
+                break
 
-    for encodedFace, faceLocation in zip(encode_current_frame, face_in_current_frame):
-        known_faces = get_encoding()
-        matched_face = face_recognition.compare_faces(known_faces, encodedFace)
-        facial_distance = face_recognition.face_distance(known_faces, encodedFace)
-        match_index = np.argmin(facial_distance)
-        # box and name matching face
-        if matched_face[match_index]:
-            name = face_names[match_index]
-            y1, x2, y2, x1 = faceLocation
-            y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
-            cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            found_known_image(name)
-        else:
-            dt = datetime.now()
-            time_stamp = dt.strftime('%d-%m-%y_%H-%M')
-            new_face = "unknown-face_{}.jpg".format(time_stamp)
-            new_face_path = "Facial Images/{}".format(new_face)
-            cv2.imwrite(new_face_path, img)
-            found_unknown_image(new_face.replace('.jpg', ''))
-            face_list.append(new_face)
+        # find the face using face_recognition library & compare it to the encoded image from the video
+        face_in_current_frame = face_recognition.face_locations(img)
+        encode_current_frame = face_recognition.face_encodings(img)
 
-    cv2.imshow('Live Camera', img)
-    cv2.waitKey(1)
+        for encodedFace, faceLocation in zip(encode_current_frame, face_in_current_frame):
+            known_faces = get_encoding()
+            matched_face = face_recognition.compare_faces(known_faces, encodedFace)
+            facial_distance = face_recognition.face_distance(known_faces, encodedFace)
+            match_index = np.argmin(facial_distance)
+            # box matching face
+            if matched_face[match_index]:
+                name = face_names[match_index]
+                y1, x2, y2, x1 = faceLocation
+                y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
+                cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                found_known_image(name)
+            else:
+                # box found face
+                y1, x2, y2, x1 = faceLocation
+                y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
+                cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                # save unknown details
+                dt = datetime.now()
+                time_stamp = dt.strftime('%d-%m-%y_%H-%M')
+                new_face = "unknown-face_{}.jpg".format(time_stamp)
+                new_face_path = "../Facial Images/{}".format(new_face)
+                cv2.imwrite(new_face_path, img)
+                found_unknown_image(new_face.replace('.jpg', ''))
+                face_list.append(new_face)
+
+        cv2.imshow('Live Camera', img)
+        cv2.waitKey(1)
+
+
+run_detection(stream_link)

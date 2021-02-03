@@ -12,10 +12,10 @@ def add_files():
     else:
         Path("../Data").mkdir(parents=True, exist_ok=True)
 
-    if os.path.exists("../Live Camera/Facial Images"):
+    if os.path.exists("../Facial Images"):
         "Directory exists"
     else:
-        Path("../Live Camera/Facial Images").mkdir(parents=True, exist_ok=True)
+        Path("../Facial Images").mkdir(parents=True, exist_ok=True)
 
     if os .path.exists("../Data/detected_faces.csv"):
         "File exists"
