@@ -25,18 +25,18 @@ def get_encoding():
     return encoded_list
 
 
-def found_unknown_image(face_image):
-    db = TinyDB('../Data/edge_security_db.json')  # path to the database
+def found_unknown_image(face_image, device_ip):
     face_name, date_found, time_found = face_image.split('_')
-    ui_table = db.table('unknown_image')  # table to hold unknown image info
-    ur_table = db.table('unread_data')  # table to hold unread data e.g. new images
-    if not ui_table.search(query.file_name == face_image):
-        ui_table.insert({"file_name": face_image, "name": face_name, "date_found": date_found, "time_found": time_found})
-        ur_table.insert({"type": "unknown image", "details": {"file_name": face_image, "name": face_name, "date_found": date_found, "time_found": time_found}})
-        db.close()
+    ur_db = TinyDB('../Data/unread_data_db.json')  # path to the unread data database
+    ui_db = TinyDB('../Data/unknown_image_db.json')  # path to the unknown image database
+    if not ui_db.search(query.file_name == face_image):
+        ui_db.insert({"file_name": face_image, "name": face_name, "date_found": date_found, "time_found": time_found})
+        ur_db.insert({"type": "unknown image", "details": {"device_ip": device_ip, "file_name": face_image, "name": face_name, "date_found": date_found, "time_found": time_found}})
+        ui_db.close()
+        ur_db.close()
 
 
-def found_known_image(face_image):
+def found_known_image(face_image, device_ip):
     db = TinyDB('../Data/edge_security_db.json')  # path to the database
     face_name, date_found, time_found = face_image.split('_')
     dt = datetime.now()
@@ -45,11 +45,11 @@ def found_known_image(face_image):
     df_table = db.table('detected_face')  # table to hold detected image info
     ur_table = db.table('unread_data')  # table to hold unread data e.g. new images
     df_table.insert({"file_name": face_image, "name": face_name, "date_detected": date_detected, "time_detected": time_detected})
-    ur_table.insert({"type": "known image", "details": {"file_name": face_image, "name": face_name, "date_detected": date_detected, "time_detected": time_detected}})
+    ur_table.insert({"type": "known image", "details": {"device_ip": device_ip, "file_name": face_image, "name": face_name, "date_detected": date_detected, "time_detected": time_detected}})
     db.close()
 
 
-def run_face_motion(stream_link):
+def run_face_motion(stream_link, device_ip):
     # loop through each frame & compare any found faces with stored images
     if stream_link == "0":
         stream_link = int(stream_link)
@@ -92,7 +92,7 @@ def run_face_motion(stream_link):
                 new_face = "unknown-face_{}.jpg".format(time_stamp)
                 new_face_path = "Facial Images/{}".format(new_face)
                 cv2.imwrite(new_face_path, img)
-                found_unknown_image(new_face.replace('.jpg', ''))
+                found_unknown_image(new_face.replace('.jpg', ''), device_ip)
                 face_list.append(new_face)
 
         # motion detection
@@ -118,7 +118,7 @@ def run_face_motion(stream_link):
             md_table = db.table('motion_detection')  # table to hold detected motion info
             ur_table = db.table('unread_data')  # table to hold unread data e.g. new images
             md_table.insert({"date_detected": date_detected, "time_detected": time_detected})
-            ur_table.insert({"type": "motion detection", "details": {"date_detected": date_detected, "time_detected": time_detected}})
+            ur_table.insert({"type": "motion detection", "details": {"device_ip": device_ip, "date_detected": date_detected, "time_detected": time_detected}})
             db.close()
 
         cv2.imshow('Live Camera', img)

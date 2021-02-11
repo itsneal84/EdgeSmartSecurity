@@ -6,7 +6,7 @@ from tinydb import TinyDB, Query
 from time import sleep
 
 
-def run_motion(stream_link):
+def run_motion(stream_link, device_ip):
     video = cv2.VideoCapture(stream_link)  # use webcam 0 for video
     ret, first_frame = video.read()  # get the first frame from the video
     ret, second_frame = video.read()  # get the second to compare
@@ -27,15 +27,15 @@ def run_motion(stream_link):
             # cv2.drawContours(frame1, contour, -1, (0, 255, 0), 2)  # draw the contours of the moving images
 
             # add detected details to database
-            db = TinyDB('../Data/edge_security_db.json')  # path to the database
+            md_db = TinyDB('../Data/motion_detection_db.json')  # path to the motion detection database
+            ur_db = TinyDB('../Data/unread_data_db.json')  # path to the unread data database
             dt = datetime.now()
             date_detected = dt.strftime('%d-%m-%y')
             time_detected = dt.strftime('%H:%M:%S')
-            md_table = db.table('motion_detection')  # table to hold detected motion info
-            ur_table = db.table('unread_data')  # table to hold unread data e.g. new images
-            md_table.insert({"date_detected": date_detected, "time_detected": time_detected})
-            ur_table.insert({"type": "motion detection", "details": {"date_detected": date_detected, "time_detected": time_detected}})
-            db.close()
+            md_db.insert({"date_detected": date_detected, "time_detected": time_detected})
+            ur_db.insert({"type": "motion detection", "details": {"device_ip": device_ip, "date_detected": date_detected, "time_detected": time_detected}})
+            md_db.close()
+            ur_db.close()
 
             sleep(5)  # 5 second delay to reduce the amount of info sent to the database
             # this could be customisable via api post

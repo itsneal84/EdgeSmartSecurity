@@ -17,29 +17,29 @@ from face_motion_detection import run_face_motion
 
 def camera_management(device_list):
     # get all the details for the device
-    # device_ip = device['ip']
-    # device_name = device['device_name']
-    # device_type = device['device_type']
+    device_ip = device_list['ip']
+    # device_name = device_list['device_name']
+    # device_type = device_list['device_type']
     stream_link = device_list['stream_link']
     motion = device_list['motion']
     face_det = device_list['face_detection']
     if face_det == 'on' and motion == 'on':
-        run_face_motion(stream_link)
+        run_face_motion(stream_link, device_ip)
     if face_det == 'on':
-        run_detection(stream_link)
+        run_detection(stream_link, device_ip)
     if motion == 'on':
-        run_motion(stream_link)
+        run_motion(stream_link, device_ip)
 
 
 def start():
     device_list = []
-    db = TinyDB('../Data/edge_security_db.json')  # path to the database
-    device_table = db.table('device')  # table with device info
-    all_devices = device_table.all()  # get all the devices in the device table
-    for device in all_devices:
-        device_list.append(device)
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        executor.map(camera_management, device_list)
+    device_db = TinyDB('../Data/devices_db.json')  # path to the devices database
+    all_devices = device_db.all()  # get all the devices in the device table
+    if len(all_devices) > 0:
+        for device in all_devices:
+            device_list.append(device)
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            executor.map(camera_management, device_list)
 
 
 if __name__ == '__main__':

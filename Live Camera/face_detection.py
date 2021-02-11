@@ -28,7 +28,8 @@ facial_images = []  # a list of the files in the path
 face_names = []  # a list of all the names from the files
 face_list = os.listdir(face_images_path)  # list of all the files in the directory
 query = Query()
-stream_link = '../Test Video/People in Street.mp4'
+stream_link = 1  # '../Test Video/People in Street.mp4' # testing
+device_ip = "192.168.0.21"  # testing
 
 
 def get_encoding():
@@ -40,15 +41,15 @@ def get_encoding():
     return encoded_list
 
 
-def found_unknown_image(face_image):
-    db = TinyDB('../Data/edge_security_db.json')  # path to the database
+def found_unknown_image(face_image, device_ip):
+    ui_db = TinyDB('../Data/unknown_image_db.json')  # path to the unknown image database
+    ur_db = TinyDB('../Data/unread_data_db.json')  # path to the unread data database
     face_name, date_found, time_found = face_image.split('_')
-    ui_table = db.table('unknown_image')  # table to hold unknown image info
-    ur_table = db.table('unread_data')  # table to hold unread data e.g. new images
-    if not ui_table.search(query.file_name == face_image):
-        ui_table.insert({"file_name": face_image, "name": face_name, "date_found": date_found, "time_found": time_found})
-        ur_table.insert({"type": "unknown image", "details": {"file_name": face_image, "name": face_name, "date_found": date_found, "time_found": time_found}})
-        db.close()
+    if not ui_db.search(query.file_name == face_image):
+        ui_db.insert({"file_name": face_image, "name": face_name, "date_found": date_found, "time_found": time_found})
+        ur_db.insert({"type": "unknown image", "details": {"device_ip": device_ip, "file_name": face_image, "name": face_name, "date_found": date_found, "time_found": time_found}})
+        ui_db.close()
+        ur_db.close()
 
     # -- ORIGINAL VERSION USING CSV --
     # with open('../Data/unknown_images.csv', 'r+') as f:
@@ -65,17 +66,17 @@ def found_unknown_image(face_image):
     #         f.writelines(f'\n{face_id},{face_image},{face_name},{date_found},{time_found}')
 
 
-def found_known_image(face_image):
-    db = TinyDB('../Data/edge_security_db.json')  # path to the database
+def found_known_image(face_image, device_ip):
+    df_db = TinyDB('../Data/detected_face_db.json')  # path to the detected image database
+    ur_db = TinyDB('../Data/unread_data_db.json')  # path to the unread data database
     face_name, date_found, time_found = face_image.split('_')
     dt = datetime.now()
     date_detected = dt.strftime('%d-%m-%y')
     time_detected = dt.strftime('%H:%M:%S')
-    df_table = db.table('detected_face')  # table to hold detected image info
-    ur_table = db.table('unread_data')  # table to hold unread data e.g. new images
-    df_table.insert({"file_name": face_image, "name": face_name, "date_detected": date_detected, "time_detected": time_detected})
-    ur_table.insert({"type": "known image", "details": {"file_name": face_image, "name": face_name, "date_detected": date_detected, "time_detected": time_detected}})
-    db.close()
+    df_db.insert({"file_name": face_image, "name": face_name, "date_detected": date_detected, "time_detected": time_detected})
+    ur_db.insert({"type": "known image", "details": {"device_ip": device_ip, "file_name": face_image, "name": face_name, "date_detected": date_detected, "time_detected": time_detected}})
+    df_db.close()
+    ur_db.close()
 
     # -- ORIGINAL VERSION USING CSV --
     # with open('../Data/detected_faces.csv', 'r+') as f:
@@ -92,9 +93,9 @@ def found_known_image(face_image):
     #         f.writelines(f'\n{face_id},{face_image},{face_name},{date_found},{time_found}')
 
 
-def run_detection(stream_link):
+def run_detection(stream_link, device_ip):
     # loop through each frame & compare any found faces with stored images
-    video = cv2.VideoCapture(stream_link)  # use webcam 0 for video
+    video = cv2.VideoCapture(1)  # use webcam 0 for video
     while True:
         success, img = video.read()
 
@@ -124,7 +125,7 @@ def run_detection(stream_link):
                 y1, x2, y2, x1 = faceLocation
                 y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
                 cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                found_known_image(name)
+                found_known_image(name, device_ip)
             else:
                 # box found face
                 y1, x2, y2, x1 = faceLocation
@@ -136,11 +137,11 @@ def run_detection(stream_link):
                 new_face = "unknown-face_{}.jpg".format(time_stamp)
                 new_face_path = "../Facial Images/{}".format(new_face)
                 cv2.imwrite(new_face_path, img)
-                found_unknown_image(new_face.replace('.jpg', ''))
+                found_unknown_image(new_face.replace('.jpg', ''), device_ip)
                 face_list.append(new_face)
 
         cv2.imshow('Live Camera', img)
         cv2.waitKey(1)
 
 
-run_detection(stream_link)
+run_detection(stream_link, device_ip)  # testing
