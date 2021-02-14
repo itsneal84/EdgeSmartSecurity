@@ -1,0 +1,246 @@
+# Neal Nisbet - B00380762 - 2021_Computing Honours Project - COMP10034
+
+________________________________________________________________________________________________
+
+User
+	Post /api/register
+	
+	json:
+		name		string user's name
+		password	string users password (hashed on adding to db)
+	
+	example:
+		{
+			"name": "nealn",
+			"password": "edgess21"
+		}
+		
+	returns:
+		"message": "user nealn added"
+
+	POST '/api/login'
+	
+	Basic Auth:
+		username	string name of registered user
+		password	string password of registered user
+	
+	returns:
+		token	string generated token to used in headers for access
+		
+		
+***	Request headers must include:					***
+***		Content-Type: application/json				***
+***		x-access-tokens: returned token from login	***
+
+________________________________________________________________________________________________
+
+New Data
+	GET /api/new_data
+	
+	json:
+		unread data	list of new unread data
+		details		list of details
+		type		string of type of information the details are for
+		
+	example:
+		    "unread data": [
+				{
+					"details": {
+						"date_detected": "27-01-21",
+						"file_name": "unknown-face_26-01-21_19-56",
+						"name": "unknown-face",
+						"time_detected": "19:06:12"
+					},
+					"type": "known image"
+				},
+				{
+					"details": {
+						"date_detected": "27-01-21",
+						"time_detected": "19:09:00"
+					},
+					"type": "motion detection"
+				}
+			]
+________________________________________________________________________________________________
+
+Unknown Faces
+	GET /api/unknown_faces returns all detected unknown faces as a list
+	
+	json:
+		unknown face	list of unknown faces
+		id				int	auto generated id from database
+		date_found		date of image found
+		file_name		string of file name
+		name			string of image name (default unknown-face)
+		time_found		time of image found
+	
+	example:
+		    "unknown face": [
+				{
+					"date_found": "22-01-21",
+					"file_name": "unknown-face_22-01-21_17-25",
+					"id": 1,
+					"name": "unknown-face",
+					"time_found": "17-25"
+				}
+			]
+	
+	GET /api/unknown_face/<id> returns detected unknown face for id e.g. 1
+	
+	json:
+		unknown face	list of unknown faces
+		date_found		date of image found
+		file_name		string of file name
+		name			string of image name (default unknown-face)
+		time_found		time of image found
+	
+	example:
+		    "unknown face": {
+				"date_found": "22-01-21",
+				"file_name": "unknown-face_22-01-21_17-25",
+				"name": "unknown-face",
+				"time_found": "17-25"
+			}
+	
+	GET /api/get_unknown_image/<file_name>
+	
+	Json
+		file name		string of file name
+		encoded_image	base64 of encoded image file
+		
+	example:
+			{
+				"file name": "unknown-face_26-01-21_19-56.jpg",
+				"image": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a..."
+			}
+
+------------------------------------------------------------------------------------------------
+			
+	PUT api/update_unknown_face/<id> update the name, filename and image based on the id e.g. 1
+		
+	json:
+		name	string new name for the person detected in the photo
+		
+	example:	
+		"name": "Neal"
+
+________________________________________________________________________________________________
+			
+Detected Faces
+	GET /api/detected_faces returns list of detected faces
+	
+	json:
+		detected faces	list of detected faces
+		id				int	auto generated id from database
+		date_detected	date of image detection
+		file_name		string of file name
+		name			string of image name (should be changed when known)
+		time_detected	time of image detection
+		
+	example:
+		    "detected faces": [
+				{
+					"date_detected": "22-01-21",
+					"file_name": "unknown-face_22-01-21_17-25",
+					"id": 1,
+					"name": "unknown-face",
+					"time_detected": "17:25:56"
+				},
+			]
+
+	GET /api/detected_face/<id> returns list of detected faces e.g. 1
+	
+	json:
+		detected faces	list of detected faces
+		date_detected	date of image detection
+		file_name		string of file name
+		name			string of image name (should be changed when known)
+		time_detected	time of image detection
+		
+	example:
+		"detected face": {
+			"date_detected": "22-01-21",
+			"file_name": "unknown-face_22-01-21_17-25",
+			"name": "unknown-face",
+			"time_detected": "17:25:56"
+		}
+
+------------------------------------------------------------------------------------------------
+
+________________________________________________________________________________________________
+		
+Devices
+	
+	Get /api/device/1  ** can use id e.g. 1, ip e.g. 192.168.20.20, name e.g. Webcam or type e.g. web camera
+	
+	json:
+		devices			list of devices
+		device_name 	string name of device`
+		device_type		string device type e.g. web cam`
+		face_detection	string on/off
+		motion			string on/off
+		ip				string ip address of device
+		stream_link		string url of device stream
+	
+	example:
+
+		{
+			"device_name": "Webcam",
+			"device_type": "web camera",
+			"face_detection": "on",
+			"ip": "192.168.20.20",
+			"motion": "on",
+			"stream_link": 0
+		}
+	
+	Get /api/device
+	
+	json:
+		devices			list of devices
+		id				int id of device
+		device_name 	string name of device`
+		device_type		string device type e.g. web cam`
+		face_detection	string on/off
+		motion			string on/off
+		ip				string ip address of device
+		stream_link		string url of device stream
+	
+	example:
+		{
+			"devices": [
+				{
+					"device_name": "Webcam",
+					"device_type": "web camera",
+					"face_detection": "on",
+					"id": 1,
+					"ip": "192.168.20.20",
+					"motion": "on",
+					"stream_link": 0
+				}
+			]
+		}
+	
+------------------------------------------------------------------------------------------------
+
+	PUT /api/add_device
+	
+	jason:
+		device_name 	string name of device`
+		device_type		string device type e.g. web cam`
+		face_detection	string on/off
+		motion			string on/off
+		ip				string ip address of device
+		stream_link		string url of device stream e.g. rtsp://<ip>:<port>/unicast/c<channel number>/s<stream type>/live
+	
+	example:
+		{
+			"device_name": "Webcam",
+			"device_type": "web camera",
+			"face_detection": "on",
+			"ip": "192.168.20.20",
+			"motion": "on",
+			"stream_link": 0
+		}
+	
+	returns:
+		Device added
