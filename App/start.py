@@ -38,9 +38,9 @@ def start_camera_process():
     all_devices = device_db.all()  # get all the devices in the device table
     if len(all_devices) > 0:
         for device in all_devices:
-            # device_list.append(device)
-            with concurrent.futures.ProcessPoolExecutor() as executor:
-                executor.map(camera_management, device)
+            device_list.append(device)
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            executor.map(camera_management, device_list)
 
 
 if __name__ == '__main__':

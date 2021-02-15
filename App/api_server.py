@@ -31,7 +31,7 @@ host_name = socket.gethostname()  # get the name of the host device
 ip_address = socket.gethostbyname(host_name)  # use this to get the ip
 query = Query()
 
-if not os.path.exists('..Data/user_db.json'):  # check if a user database has been generated
+if not os.path.exists('../Data/user_db.json'):  # check if a user database has been generated
     secret_key = os.urandom(12).hex()  # generate a random series of 12 numbers
     user_db = TinyDB('../Data/user_db.json')  # path to the user database
     user_db.insert({"public_id": secret_key, "user": "admin", "password": generate_password_hash("edgess21")})  # add default user
@@ -46,8 +46,8 @@ def token_required(func):
         token = None
         u_db = TinyDB('../Data/user_db.json')  # path to the user database
 
-        if request.headers['x-access-tokens']:
-            token = request.headers['x-access-tokens']
+        if request.headers['x-access-token']:
+            token = request.headers['x-access-token']
 
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms='HS256')

@@ -28,7 +28,7 @@ facial_images = []  # a list of the files in the path
 face_names = []  # a list of all the names from the files
 face_list = os.listdir(face_images_path)  # list of all the files in the directory
 query = Query()
-# stream_link = 1  # '../Test Video/People in Street.mp4' # testing
+# stream_link = 0  # '../Test Video/People in Street.mp4' # testing
 # device_ip = "192.168.0.21"  # testing
 
 
@@ -69,7 +69,7 @@ def found_unknown_image(face_image, device_ip):
 def found_known_image(face_image, device_ip):
     df_db = TinyDB('../Data/detected_face_db.json')  # path to the detected image database
     ur_db = TinyDB('../Data/unread_data_db.json')  # path to the unread data database
-    face_name, date_found, time_found = face_image.split('_')
+    face_name = face_image
     dt = datetime.now()
     date_detected = dt.strftime('%d-%m-%y')
     time_detected = dt.strftime('%H:%M:%S')

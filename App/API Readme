@@ -30,7 +30,7 @@ User
 		
 ***	Request headers must include:					***
 ***		Content-Type: application/json				***
-***		x-access-tokens: returned token from login	***
+***		x-access-token: returned token from login	***
 
 ________________________________________________________________________________________________
 
