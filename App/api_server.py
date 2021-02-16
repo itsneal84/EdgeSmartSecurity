@@ -271,12 +271,10 @@ def add_device(self):
 def add_devices(self):
     d_db = TinyDB('../Data/devices_db.json')  # path to the devices database
     req = request.get_json()
-    d_db.insert(req)
+    for device in req['devices']:
+        d_db.insert(device)
     d_db.close()
     return "Devices added", 200
-
-# @app.route('/api/set_features/<device_ip>', methods=['POST'])
-# def set_motion(ip):
 
 
 @app.route('/api/update_unknown_face/', methods=['POST'])
@@ -314,7 +312,7 @@ def start_cameras(self):
     d_db = TinyDB('../Data/devices_db.json')  # path to the devices database
     if len(d_db) > 0:
         start.start_camera_process()
-        return "Camera process started"
+        return "camera process started"
     else:
         return "Please add a device"
 

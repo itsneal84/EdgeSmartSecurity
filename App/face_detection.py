@@ -140,8 +140,9 @@ def run_detection(stream_link, device_ip):
                 found_unknown_image(new_face.replace('.jpg', ''), device_ip)
                 face_list.append(new_face)
 
-        cv2.imshow('Live Camera', img)
-        cv2.waitKey(1)
+        # cv2.imshow('Live Camera', img)
+        # cv2.waitKey(1)
+        print("face detected")
 
 
 # run_detection(stream_link, device_ip)  # testing

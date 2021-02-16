@@ -121,5 +121,6 @@ def run_face_motion(stream_link, device_ip):
             ur_table.insert({"type": "motion detection", "details": {"device_ip": device_ip, "date_detected": date_detected, "time_detected": time_detected}})
             db.close()
 
-        cv2.imshow('Live Camera', img)
-        cv2.waitKey(1)
+        # cv2.imshow('Live Camera', img)
+        # cv2.waitKey(1)
+        print("motion & face detected")

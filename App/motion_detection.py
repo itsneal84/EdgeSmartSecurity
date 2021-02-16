@@ -37,11 +37,12 @@ def run_motion(stream_link, device_ip):
             md_db.close()
             ur_db.close()
 
-            sleep(5)  # 5 second delay to reduce the amount of info sent to the database
+            sleep(30)  # 5 second delay to reduce the amount of info sent to the database
             # this could be customisable via api post
 
-        cv2.imshow("Motion", first_frame)
+        # cv2.imshow("Motion", first_frame)
         first_frame = second_frame  # assign the value of frame1 in frame2
         ret, second_frame = video.read()
 
-        cv2.waitKey(1)
+        # cv2.waitKey(1)
+        # print("motion detection")
