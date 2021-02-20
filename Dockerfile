@@ -8,10 +8,11 @@ WORKDIR /App
 COPY requirements.txt .
 
 # install dependencies
+RUN apt-get update && apt-get -y install cmake protobuf-compiler
 RUN pip install -r requirements.txt
 
 # copy the content of the local src directory to the working directory
-COPY src/ .
+COPY api_server.py /app
 
 # command to run on container start
 CMD [ "python", "./api_server.py" ]

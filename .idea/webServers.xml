@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="0dc0fa82-28e0-43cc-9a2f-9b9fb8c32539" name="MyServer" url="http://localhost">
+        <fileTransfer mountedRoot="C:\Program Files\JetBrains\PyCharm 2020.3.3\jbr\bin\ESS" accessType="MOUNT" port="0" />
+      </webServer>
+    </option>
+  </component>
+</project>
