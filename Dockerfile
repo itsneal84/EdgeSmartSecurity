@@ -12,4 +12,4 @@ RUN apt-get update && apt-get -y install cmake protobuf-compiler
 RUN pip install -r requirements.txt
 
 # command to run on container start
-CMD [ "python", "./api_server.py" ]
+CMD [ "python", "./App/api_server.py" ]
