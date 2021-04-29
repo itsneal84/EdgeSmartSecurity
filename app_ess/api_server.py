@@ -140,6 +140,7 @@ def get_unknown_face(id):
     ui_db = TinyDB('db_data/unknown_image_db.json')  # path to the unknown image database
     unknown_list = ui_db.get(doc_id=int(id))
     ui_db.close()
+
     # -- ORIGINAL WAY USING CSV --
     # get the list of data from the csv file
     # data_list = get_unknown_file()

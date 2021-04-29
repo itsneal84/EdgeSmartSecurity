@@ -23,13 +23,13 @@ from tinydb import TinyDB, Query
 
 
 # variables for storing the facial images
-face_images_path = 'facial_images'
+face_images_path = 'facial_images/Bruce'
 facial_images = []  # a list of the files in the path
 face_names = []  # a list of all the names from the files
 face_list = os.listdir(face_images_path)  # list of all the files in the directory
 query = Query()
-# stream_link = 0  # '../Test Video/People in Street.mp4' # testing
-# device_ip = "192.168.0.21"  # testing
+stream_link = 'test_video/face_test.mp4'  # testing
+device_ip = "192.168.0.21"  # testing
 
 
 def get_encoding():
@@ -44,10 +44,12 @@ def get_encoding():
 def found_unknown_image(face_image, device_ip):
     ui_db = TinyDB('db_data/unknown_image_db.json')  # path to the unknown image database
     ur_db = TinyDB('db_data/unread_data_db.json')  # path to the unread data database
+    td_db = TinyDB('db_data/face_test_bruce_data_db.json')  # path to the test results database
     face_name, date_found, time_found = face_image.split('_')
     if not ui_db.search(query.file_name == face_image):
         ui_db.insert({"file_name": face_image, "name": face_name, "date_found": date_found, "time_found": time_found})
-        ur_db.insert({"type": "unknown image", "details": {"device_ip": device_ip, "file_name": face_image, "name": face_name, "date_found": date_found, "time_found": time_found}})
+        ur_db.insert({"type": "unknown image", "device_ip": device_ip, "file_name": face_image, "name": face_name, "date_found": date_found, "time_found": time_found})
+        td_db.insert({"type": "unknown image", "device_ip": device_ip, "file_name": face_image, "name": face_name, "date_found": date_found, "time_found": time_found})
         ui_db.close()
         ur_db.close()
 
@@ -69,12 +71,15 @@ def found_unknown_image(face_image, device_ip):
 def found_known_image(face_image, device_ip):
     df_db = TinyDB('db_data/detected_face_db.json')  # path to the detected image database
     ur_db = TinyDB('db_data/unread_data_db.json')  # path to the unread data database
+    td_db = TinyDB('db_data/face_test_bruce_data_db.json')  # path to the test results database
     face_name = face_image
     dt = datetime.now()
     date_detected = dt.strftime('%d-%m-%y')
     time_detected = dt.strftime('%H:%M:%S')
     df_db.insert({"file_name": face_image, "name": face_name, "date_detected": date_detected, "time_detected": time_detected})
-    ur_db.insert({"type": "known image", "details": {"device_ip": device_ip, "file_name": face_image, "name": face_name, "date_detected": date_detected, "time_detected": time_detected}})
+    ur_db.insert({"type": "known image", "device_ip": device_ip, "file_name": face_image, "name": face_name, "date_detected": date_detected, "time_detected": time_detected})
+    td_db.insert({"type": "known image", "device_ip": device_ip, "file_name": face_image, "name": face_name,
+                  "date_detected": date_detected, "time_detected": time_detected})
     df_db.close()
     ur_db.close()
 
@@ -95,54 +100,61 @@ def found_known_image(face_image, device_ip):
 
 def run_detection(stream_link, device_ip):
     # loop through each frame & compare any found faces with stored images
-    video = cv2.VideoCapture(1)  # use webcam 0 for video
+    video = cv2.VideoCapture(stream_link)  # use webcam 0 for video
+    f_count = 24  # set frame rate to reduce processing every frame
     while True:
         success, img = video.read()
 
         # img_small = cv2.resize(img, (0, 0), None, 0.25, 0.25)  # reduce the image size from live frame
         # img_small = cv2.cvtColor(img_small, cv2.COLOR_BGR2RGB)
 
-        for face in face_list:
-            current_image = cv2.imread(f'{face_images_path}/{face}')
-            if current_image is not None:
-                facial_images.append(current_image)
-                face_names.append(os.path.splitext(face)[0])  # trim the file name to use as detected name
-            else:
-                break
+        if f_count == 24:
+            f_count = 0
+            for face in face_list:
+                current_image = cv2.imread(f'{face_images_path}/{face}')
+                if current_image is not None:
+                    facial_images.append(current_image)
+                    face_names.append(os.path.splitext(face)[0])  # trim the file name to use as detected name
+                else:
+                    break
 
-        # find the face using face_recognition library & compare it to the encoded image from the video
-        face_in_current_frame = face_recognition.face_locations(img)
-        encode_current_frame = face_recognition.face_encodings(img)
+            # find the face using face_recognition library & compare it to the encoded image from the video
+            face_in_current_frame = face_recognition.face_locations(img)
+            # encode_current_frame = face_recognition.face_encodings(img_small, face_in_current_frame)[0]
+            encode_current_frame = face_recognition.face_encodings(img)
 
-        for encodedFace, faceLocation in zip(encode_current_frame, face_in_current_frame):
-            known_faces = get_encoding()
-            matched_face = face_recognition.compare_faces(known_faces, encodedFace)
-            facial_distance = face_recognition.face_distance(known_faces, encodedFace)
-            match_index = np.argmin(facial_distance)
-            # box matching face
-            if matched_face[match_index]:
-                name = face_names[match_index]
-                y1, x2, y2, x1 = faceLocation
-                y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
-                cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                found_known_image(name, device_ip)
-            else:
-                # box found face
-                y1, x2, y2, x1 = faceLocation
-                y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
-                cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                # save unknown details
-                dt = datetime.now()
-                time_stamp = dt.strftime('%d-%m-%y_%H-%M')
-                new_face = "unknown-face_{}.jpg".format(time_stamp)
-                new_face_path = "facial_images/{}".format(new_face)
-                cv2.imwrite(new_face_path, img)
-                found_unknown_image(new_face.replace('.jpg', ''), device_ip)
-                face_list.append(new_face)
-
+            for encodedFace, faceLocation in zip(encode_current_frame, face_in_current_frame):
+                known_faces = get_encoding()
+                matched_face = face_recognition.compare_faces(known_faces, encodedFace)
+                facial_distance = face_recognition.face_distance(known_faces, encodedFace)
+                match_index = np.argmin(facial_distance)
+                # box matching face
+                if matched_face[match_index]:
+                    name = face_names[match_index].upper()
+                    y1, x2, y2, x1 = faceLocation
+                    cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    cv2.rectangle(img, (x1, y2-5), (x2, y2), (0, 255, 0), cv2.FILLED)
+                    cv2.putText(img, name, (x1+6, y2-6), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+                    found_known_image(name, device_ip)
+                else:
+                    # box found face
+                    name = "unknown face"
+                    y1, x2, y2, x1 = faceLocation
+                    # cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    cv2.rectangle(img, (x1, y2 - 5), (x2, y2), (0, 255, 0), cv2.FILLED)
+                    cv2.putText(img, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+                    # save unknown details
+                    dt = datetime.now()
+                    time_stamp = dt.strftime('%d-%m-%y_%H-%M')
+                    new_face = "unknown-face_{}.jpg".format(time_stamp)
+                    new_face_path = "facial_images/{}".format(new_face)
+                    cv2.imwrite(new_face_path, img)
+                    found_unknown_image(new_face.replace('.jpg', ''), device_ip)
+                    face_list.append(new_face)
+        # print("face detected " + name)
+        f_count += 1
         # cv2.imshow('Live Camera', img)
         # cv2.waitKey(1)
-        print("face detected")
 
 
-# run_detection(stream_link, device_ip)  # testing
+run_detection(stream_link, device_ip)  # testing
