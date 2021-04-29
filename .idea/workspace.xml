@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="3f11bcd8-5052-41cc-918d-49f70e6a1828" name="Default Changelist" comment="db added">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="805c7974-2e1e-4b19-b780-d13228e58197" name="Default Changelist" comment="Final Version" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,20 +10,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Setup Script" />
-        <option value="Python Script" />
+        <option value="Python Unit Test" />
       </list>
-    </option>
-  </component>
-  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
-    <envs>
-      <env key="FLASK_APP" value="app" />
-    </envs>
-    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
-    <option name="myEnvs">
-      <map>
-        <entry key="FLASK_APP" value="app" />
-      </map>
     </option>
   </component>
   <component name="Git.Settings">
@@ -42,10 +25,7 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
-  <component name="ProjectId" id="1nLFfCb3rInTyztYFJipf7yEGoy" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectId" id="1qz8kVCu0qzWahUZKHEEhskaEld" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -54,21 +34,10 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\Documents\OneDrive - University of the West of Scotland\2021_Computing Honours Project\EdgeSmartSecurity\App" />
-      <recent name="D:\Documents\OneDrive - University of the West of Scotland\2021_Computing Honours Project\EdgeSmartSecurity" />
-      <recent name="D:\Documents\OneDrive - University of the West of Scotland\2021_Computing Honours Project\EdgeSmartSecurity\src" />
-      <recent name="D:\Documents\OneDrive - University of the West of Scotland\2021_Computing Honours Project\EdgeSmartSecurity\Facial Images" />
-      <recent name="D:\Documents\OneDrive - University of the West of Scotland\2021_Computing Honours Project\EdgeSmartSecurity\Live Camera" />
-    </key>
-  </component>
-  <component name="RunManager" selected="Python.start_process">
+  <component name="RunManager" selected="Python.face_detection">
     <configuration name="api_server" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="EdgeSmartSecurity" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -90,7 +59,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="start_process" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="face_detection" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="EdgeSmartSecurity" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -102,7 +71,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app_ess/start_process.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app_ess/face_detection.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -111,28 +80,31 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Docker" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
-      <deployment type="dockerfile">
-        <settings>
-          <option name="imageTag" value="inital" />
-          <option name="buildCliOptions" value="" />
-          <option name="buildOnly" value="true" />
-          <option name="command" value="" />
-          <option name="containerName" value="ESS" />
-          <option name="entrypoint" value="" />
-          <option name="commandLineOptions" value="" />
-          <option name="sourceFilePath" value="Dockerfile" />
-        </settings>
-      </deployment>
+    <configuration name="motion_detection" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="EdgeSmartSecurity" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app_ess" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app_ess/motion_detection.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <list>
-      <item itemvalue="Python.api_server" />
-      <item itemvalue="Python.start_process" />
-    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.start_process" />
+        <item itemvalue="Python.face_detection" />
+        <item itemvalue="Python.motion_detection" />
         <item itemvalue="Python.api_server" />
       </list>
     </recent_temporary>
@@ -140,109 +112,28 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="3f11bcd8-5052-41cc-918d-49f70e6a1828" name="Default Changelist" comment="" />
-      <created>1611161567394</created>
+      <changelist id="805c7974-2e1e-4b19-b780-d13228e58197" name="Default Changelist" comment="" />
+      <created>1618071203389</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1611161567394</updated>
-      <workItem from="1613674200691" duration="14142000" />
+      <updated>1618071203389</updated>
     </task>
-    <task id="LOCAL-00001" summary="new folder structure">
-      <created>1611162562648</created>
+    <task id="LOCAL-00001" summary="Final Version">
+      <created>1619686648338</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1611162562648</updated>
+      <updated>1619686648338</updated>
     </task>
-    <task id="LOCAL-00002" summary="db added">
-      <created>1611259680804</created>
+    <task id="LOCAL-00002" summary="Final Version">
+      <created>1619690480288</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1611259680804</updated>
+      <updated>1619690480288</updated>
     </task>
-    <task id="LOCAL-00003" summary="motion detection added">
-      <created>1611594861472</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1611594861472</updated>
-    </task>
-    <task id="LOCAL-00004" summary="multiprocessing">
-      <created>1612383781479</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1612383781479</updated>
-    </task>
-    <task id="LOCAL-00005" summary="basic auth">
-      <created>1613034035624</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1613034035624</updated>
-    </task>
-    <task id="LOCAL-00006" summary="new directory layout for running program from api">
-      <created>1613314736295</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1613314736295</updated>
-    </task>
-    <task id="LOCAL-00007" summary="app start bugs fixed">
-      <created>1613416793946</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1613416793946</updated>
-    </task>
-    <task id="LOCAL-00008" summary="multi-processing working">
-      <created>1613504701708</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1613504701709</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Docker Build">
-      <created>1613826702662</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1613826702662</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Updated Dockerfile">
-      <created>1613837344694</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1613837344736</updated>
-    </task>
-    <task id="LOCAL-00011" summary="new working structure for docker">
-      <created>1614281032238</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1614281032238</updated>
-    </task>
-    <task id="LOCAL-00012" summary="new working structure for docker">
-      <created>1614281571917</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1614281571917</updated>
-    </task>
-    <task id="LOCAL-00013" summary="new working structure for docker">
-      <created>1614281897462</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1614281897462</updated>
-    </task>
-    <option name="localTasksCounter" value="14" />
+    <option name="localTasksCounter" value="3" />
     <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -257,102 +148,16 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="new folder structure" />
-    <MESSAGE value="db added" />
-    <MESSAGE value="motion detection added" />
-    <MESSAGE value="multiprocessing" />
-    <MESSAGE value="basic auth" />
-    <MESSAGE value="new directory layout for running program from api" />
-    <MESSAGE value="app start bugs fixed" />
-    <MESSAGE value="multi-processing working" />
-    <MESSAGE value="Docker Build" />
-    <MESSAGE value="Updated Dockerfile" />
-    <MESSAGE value="new working structure for docker" />
-    <option name="LAST_COMMIT_MESSAGE" value="new working structure for docker" />
+    <MESSAGE value="Final Version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Final Version" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/create_db.py</url>
-          <line>2</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/api_server.py</url>
-          <line>140</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/api_server.py</url>
-          <line>113</line>
-          <option name="timeStamp" value="21" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/api_server.py</url>
-          <line>163</line>
-          <option name="timeStamp" value="22" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/api_server.py</url>
-          <line>96</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/motion_detection.py</url>
-          <line>9</line>
-          <option name="timeStamp" value="42" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/api_server.py</url>
-          <line>252</line>
-          <option name="timeStamp" value="60" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/api_server.py</url>
-          <line>65</line>
-          <option name="timeStamp" value="63" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/api_server.py</url>
-          <line>293</line>
-          <option name="timeStamp" value="68" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/api_server.py</url>
-          <line>266</line>
-          <option name="timeStamp" value="70" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/api_server.py</url>
-          <line>240</line>
-          <option name="timeStamp" value="79" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/face_detection.py</url>
-          <line>44</line>
-          <option name="timeStamp" value="95" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/api_server.py</url>
-          <line>271</line>
-          <option name="timeStamp" value="98" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/start.py</url>
-          <line>18</line>
-          <option name="timeStamp" value="101" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/App/face_detection.py</url>
-          <line>97</line>
-          <option name="timeStamp" value="102" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/app_ess/start_process.py</url>
-          <line>36</line>
-          <option name="timeStamp" value="103" />
+          <url>file://$PROJECT_DIR$/app_ess/api_server.py</url>
+          <line>350</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
